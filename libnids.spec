@@ -1,16 +1,15 @@
 Summary:	"libpwrite" Network Routine Library
 Summary(pl):	Biblioteka czynno¶ci sieciowych
 Name:		libnids
-Version:	1.17
-Release:	2
+Version:	1.18
+Release:	1
 Epoch:		1
 License:	BSD
 Group:		Libraries
-Source0:	http://www.avet.com.pl/~nergal/libnids/dist/%{name}-%{version}.tar.gz
-# Source0-md5:	0f22335b465cc57829dfe16c1da4433c
-Patch0:		%{name}-asmgcc33.patch
-Patch1:		%{name}-libnet1.patch
-URL:		http://www.avet.com.pl/~nergal/libnids/
+Source0:	http://dl.sourceforge.net/libnids/%{name}-%{version}.tar.gz
+# Source0-md5:	9ee6dcdfac97bae6fe611aa27d2594a5
+Patch0:		%{name}-libnet1.patch
+URL:		http://libnids.sourceforge.net/
 BuildRequires:	autoconf
 BuildRequires:	libpcap-devel
 BuildRequires:	libnet1-devel
@@ -55,11 +54,11 @@ Biblioteka statyczna libnids.
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
 
 %build
 %{__autoconf}
-%configure  --enable-shared
+%configure \
+	--enable-shared
 
 %{__make}
 

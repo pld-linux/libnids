@@ -1,7 +1,6 @@
-diff -Nur libnids-1.17.orig/configure.in libnids-1.17/configure.in
---- libnids-1.17.orig/configure.in	Fri Aug 30 15:09:35 2002
-+++ libnids-1.17/configure.in	Wed Aug 27 23:20:06 2003
-@@ -122,39 +122,39 @@
+--- libnids-1.18/configure.in.orig	2003-10-15 01:40:00.000000000 +0200
++++ libnids-1.18/configure.in	2003-10-27 23:00:07.224952248 +0100
+@@ -127,18 +127,18 @@
       ;;
    *)
       AC_MSG_RESULT($withval)
@@ -21,29 +20,34 @@ diff -Nur libnids-1.17.orig/configure.in libnids-1.17/configure.in
 -	LNETLIB="-L$withval/src -lnet"
 +	LNETLIB="-L$withval/src -lnet1"
       else
--        AC_ERROR(libnet.h or libnet.a not found in $withval)
-+        AC_ERROR(libnet1.h or libnet1.a not found in $withval)
+-	echo "A working combination of libnet.h, libnet.a and libnet-config not found in $withval; get libnet from www.packetfactory.net/projects/libnet and reinstall"
++	echo "A working combination of libnet1.h, libnet1.a and libnet1-config not found in $withval; get libnet from www.packetfactory.net/projects/libnet and reinstall"
+         AC_ERROR(libnet)
       fi
       ;;
-   esac ],
+@@ -146,12 +146,12 @@
  [ if test "x"$LIBNET_VER = "x"-1 ; then
  	AC_MSG_RESULT(skipping libnet)
--  elif test -f ${prefix}/include/libnet.h -a ${prefix}/lib/libnet.a ; then
--     LNET_CFLAGS="-I${prefix}/include `${prefix}/bin/libnet-config --defines 2>/dev/null`"
--     LNETLIB="-L${prefix}/lib -lnet"
-+  elif test -f ${prefix}/include/libnet1.h -a ${prefix}/lib/libnet1.a ; then
-+     LNET_CFLAGS="-I${prefix}/include `${prefix}/bin/libnet1-config --defines 2>/dev/null`"
-+     LNETLIB="-L${prefix}/lib -lnet1"
-      AC_MSG_RESULT(yes)
    else
--	LNET_CFLAGS="`libnet-config --defines 2>/dev/null`"
-+	LNET_CFLAGS="`libnet1-config --defines 2>/dev/null`"
- 	TMPC="$CFLAGS"
+-	if test -f ${prefix}/include/libnet.h -a ${exec_prefix}/lib/libnet.a ; then
+-	     LNET_CFLAGS="-I${prefix}/include `${exec_prefix}/bin/libnet-config --defines 2>/dev/null`"
+-	     LNETLIB="-L${exec_prefix}/lib -lnet"
++	if test -f ${prefix}/include/libnet1.h -a ${exec_prefix}/lib/libnet1.a ; then
++	     LNET_CFLAGS="-I${prefix}/include `${exec_prefix}/bin/libnet1-config --defines 2>/dev/null`"
++	     LNETLIB="-L${exec_prefix}/lib -lnet1"
+ 	else
+-	     LNET_CFLAGS="`libnet-config --defines 2>/dev/null`"
+-	     LNETLIB="-lnet"
++	     LNET_CFLAGS="`libnet1-config --defines 2>/dev/null`"
++	     LNETLIB="-lnet1"
+ 	fi
+   fi ]
+ )
+@@ -161,15 +161,15 @@
  	TMPL="$LIBS"
  	CFLAGS="$CFLAGS $LNET_CFLAGS"
--	LIBS="-lnet $LIBS"
+ 	LIBS="$LNETLIB $LIBS"
 -	AC_TRY_LINK([#include <libnet.h>], libnet_get_prand(0),
-+	LIBS="-lnet1 $LIBS"
 +	AC_TRY_LINK([#include <libnet1.h>], libnet_get_prand(0),
  		LIBNET_FOUND=1,LIBNET_FOUND=0)
  	CFLAGS="$TMPC"
@@ -53,8 +57,12 @@ diff -Nur libnids-1.17.orig/configure.in libnids-1.17/configure.in
 +		LNETLIB="-lnet1"
  		AC_MSG_RESULT(yes)
  	else
- 		AC_ERROR(libnet not found)
-@@ -214,7 +214,7 @@
+-		echo "Working libnet not found; get it from www.packetfactory.net/projects/libnet and reinstall"
++		echo "Working libnet1 not found; get it from www.packetfactory.net/projects/libnet and reinstall"
+ 		AC_ERROR(libnet)
+ 	fi
+ fi
+@@ -227,7 +227,7 @@
  	TMP=$CFLAGS
  	CFLAGS="$CFLAGS $LNET_CFLAGS"
  	AC_MSG_CHECKING(libnet version)
