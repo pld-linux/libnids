@@ -1,0 +1,79 @@
+diff -urN libnids-1.14.org/Makefile.in libnids-1.14/Makefile.in
+--- libnids-1.14.org/Makefile.in	Thu Nov  2 09:47:59 2000
++++ libnids-1.14/Makefile.in	Thu Nov  2 09:51:31 2000
+@@ -3,7 +3,7 @@
+ #
+ # Dug Song <dugsong@monkey.org>
+ 
+-SUBDIRS	= src samples
++SUBDIRS	= src
+ 
+ all install clean:
+ 	for dir in $(SUBDIRS) ; do (cd $$dir ; $(MAKE) $@) ; done
+diff -urN libnids-1.14.org/configure.in libnids-1.14/configure.in
+--- libnids-1.14.org/configure.in	Thu Nov  2 09:47:59 2000
++++ libnids-1.14/configure.in	Thu Nov  2 09:51:22 2000
+@@ -88,10 +88,10 @@
+      ;;
+   *)
+      AC_MSG_RESULT($withval)
+-     if test -f $withval/include/libnet.h -a -f $withval/lib/libnet.a; then
++     if test -f $withval/include/libnet.h -a -f $withval/lib/libnet.so; then
+         owd=`pwd`
+         if cd $withval; then withval=`pwd`; cd $owd; fi
+-	CFLAGS="$CFLAGS `$withval/libnet-config --defines`"
++	CFLAGS="$CFLAGS `/usr/bin/libnet-config --defines`"
+ 	LNETINC="-I$withval/include"
+ 	LNETLIB="-L$withval/lib -lnet"
+ 	LDFLAGS="$LDFLAGS -L$withval/lib"
+diff -urN libnids-1.14.org/src/Makefile.in libnids-1.14/src/Makefile.in
+--- libnids-1.14.org/src/Makefile.in	Thu Nov  2 09:47:59 2000
++++ libnids-1.14/src/Makefile.in	Thu Nov  2 10:02:19 2000
+@@ -13,8 +13,12 @@
+ libdir		= @libdir@
+ mandir		= @mandir@
+ 
++LIBSTATIC       = libnids.a
++LIBSHARED       = libnids.so.1.0
++
+ CC		= @CC@
+ CFLAGS		= @CFLAGS@ -Wall -DHAVE_ICMPHDR=@ICMPHEADER@ -DHAVE_TCP_STATES=@TCPSTATES@ -DHAVE_BSD_UDPHDR=@HAVE_BSD_UDPHDR@
++CFLAGSSHARED	= @CFLAGS@ -Wall -DHAVE_ICMPHDR=@ICMPHEADER@ -DHAVE_TCP_STATES=@TCPSTATES@ -DHAVE_BSD_UDPHDR=@HAVE_BSD_UDPHDR@ -shared -Wl,-soname,$(LIBSHARED)
+ LDFLAGS		= @LDFLAGS@
+ 
+ PCAPINC		= @PCAPINC@
+@@ -32,20 +36,32 @@
+ OBJS		= checksum.o ip_fragment.o ip_options.o killtcp.o \
+ 		  libnids.o scan.o tcp.o util.o allpromisc.o hash.o
+ 
++OBJSSHARE	= checksum_pic.o ip_fragment_pic.o ip_options_pic.o \
++		  killtcp_pic.o libnids_pic.o scan_pic.o tcp_pic.o \
++		  util_pic.o allpromisc_pic.o hash_pic.o
+ .c.o:
+ 	$(CC) -c $(CFLAGS) -I. $(INCS) $<
+ 
+-all: libnids.a
++%_pic.o: %.c
++	$(CC) -fPIC $(CFLAGS) -I. $(INCS) -c $< -o $@
++
+ 
+-libnids.a: $(OBJS)
++all: $(LIBSTATIC) $(LIBSHARED)
++
++$(LIBSTATIC): $(OBJS)
+ 	ar -cr $@ $(OBJS)
+ 	$(RANLIB) $@
+ 
++$(LIBSHARED): $(OBJSSHARE)
++	$(CC) $(CFLAGSSHARED) -o $(LIBSHARED) $(OBJ_PIC) -lc
++
+ install: libnids.a
+ 	../mkinstalldirs $(install_prefix)$(libdir)
+ 	../mkinstalldirs $(install_prefix)$(includedir)
+ 	../mkinstalldirs $(install_prefix)$(mandir)/man3
+ 	$(INSTALL) -c -m 644 libnids.a $(install_prefix)$(libdir)
++	$(INSTALL) -c -m 755 $(LIBSHARED) $(install_prefix)$(libdir)
++	ln -s -f $(LIBSHARED) $(install_prefix)$(libdir)/libnids.so
+ 	$(INSTALL) -c -m 644 nids.h $(install_prefix)$(includedir)
+ 	$(INSTALL) -c -m 644 libnids.3 $(install_prefix)$(mandir)/man3
+ 
