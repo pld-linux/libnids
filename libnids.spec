@@ -1,5 +1,5 @@
-Summary:	"libpwrite" Network Routine Library
-Summary(pl):	Biblioteka czynno¶ci sieciowych
+Summary:	Implementation of E-component of Network Intrusion Detection System
+Summary(pl):	Implementacja E-komponentu NIDS (sieciowego systemu wykrywania intruzów)
 Name:		libnids
 Version:	1.18
 Release:	1
