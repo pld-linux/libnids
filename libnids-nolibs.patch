@@ -1,6 +1,6 @@
---- libnids-1.18/configure.in.orig	Tue Oct 28 12:53:53 2003
-+++ libnids-1.18/configure.in	Tue Oct 28 12:55:28 2003
-@@ -40,8 +40,8 @@
+--- libnids-1.16/configure.in.orig	Tue Oct 28 12:51:56 2003
++++ libnids-1.16/configure.in	Tue Oct 28 12:54:26 2003
+@@ -35,8 +35,8 @@
  dnl Checks for library functions.
  AC_CHECK_FUNCS(gettimeofday)
  dnl XXX - Solaris sux.
@@ -9,5 +9,5 @@
 +AC_SEARCH_LIBS(socket, socket)
 +AC_SEARCH_LIBS(gethostbyname, nsl)
  
- case "$target_cpu" in
- 	alpha*|arm*|hp*|mips*|sparc*)
+ dnl Checks for libpcap
+ AC_MSG_CHECKING(for libpcap)
