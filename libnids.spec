@@ -12,6 +12,7 @@ Group(pl):	Biblioteki
 Source0:	http://www.packetfactory.net/Projects/Libnids/dist/%{name}-%{version}.tar.gz
 Patch0:		%{name}-conf.patch
 URL:		http://www.packetfactory.net/Projects/Libnids/
+BuildRequires:	autoconf
 BuildRequires:	libpcap-devel
 BuildRequires:	libnet-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -71,11 +72,8 @@ autoconf
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%{__make} \
-	install_prefix=$RPM_BUILD_ROOT \
-	install
-
-ln -sf	libnids.so	$RPM_BUILD_ROOT%{_libdir}/libpwrite
+%{__make} install \
+	install_prefix=$RPM_BUILD_ROOT
 
 gzip -9nf CHANGES README CREDITS MISC doc/*
 
