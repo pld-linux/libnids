@@ -1,0 +1,11 @@
+--- libnids-1.14/src/Makefile.in~	Mon Nov 20 18:20:15 2000
++++ libnids-1.14/src/Makefile.in	Mon Nov 20 18:22:06 2000
+@@ -53,7 +53,7 @@
+ 	$(RANLIB) $@
+ 
+ $(LIBSHARED): $(OBJSSHARE)
+-	$(CC) $(CFLAGSSHARED) -o $(LIBSHARED) $(OBJSSHARE) -lc
++	$(CC) $(CFLAGSSHARED) -o $(LIBSHARED) $(OBJSSHARE) -lc $(LNETLIB) $(PCAPLIB)
+ 
+ install: libnids.a
+ 	../mkinstalldirs $(install_prefix)$(libdir)
