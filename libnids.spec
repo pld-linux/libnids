@@ -7,6 +7,7 @@ Epoch:		1
 License:	BSD
 Group:		Libraries
 Source0:	http://www.packetfactory.net/Projects/Libnids/dist/%{name}-%{version}.tar.gz
+# Source0-md5:	95497093d0de330be12ddc658ad7decc
 Patch0:		%{name}-conf.patch
 URL:		http://www.packetfactory.net/Projects/Libnids/
 BuildRequires:	autoconf
