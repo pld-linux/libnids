@@ -95,7 +95,7 @@ diff -urN libnids-1.14.org/src/Makefile.in libnids-1.14/src/Makefile.in
  	$(RANLIB) $@
  
 +$(LIBSHARED): $(OBJSSHARE)
-+	$(CC) $(CFLAGSSHARED) -o $(LIBSHARED) $(OBJSSHARE) $(LIBS) -lc
++	$(CC) $(CFLAGSSHARED) -o $(LIBSHARED) $(OBJSSHARE) $(LIBS) $(LNETLIB) $(PCAPLIB)
 +
  install: libnids.a
  	../mkinstalldirs $(install_prefix)$(libdir)
