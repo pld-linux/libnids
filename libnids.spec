@@ -6,31 +6,35 @@ Release:	1
 Epoch:		1
 License:	BSD
 Group:		Libraries
-Group(pl):	Biblioteki
+Group(de):	Libraries
 Group(fr):	Librairies
+Group(pl):	Biblioteki
 Source0:	http://www.packetfactory.net/Projects/Libnids/dist/%{name}-%{version}.tar.gz
-Patch0:		libnids-conf.patch
+Patch0:		%{name}-conf.patch
 URL:		http://www.packetfactory.net/Projects/Libnids/
 BuildRequires:	libpcap-devel
 BuildRequires:	libnet-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
-Libnids is an implementation of an E-component of Network Intrusion Detection
-System. It emulates the IP stack of Linux 2.0.x. Libnids offers IP defragmentation,
-TCP stream assembly and TCP port scan detection.
+Libnids is an implementation of an E-component of Network Intrusion
+Detection System. It emulates the IP stack of Linux 2.0.x. Libnids
+offers IP defragmentation, TCP stream assembly and TCP port scan
+detection.
 
 %description -l pl
-Libnids jest implementacj± E-komponentu Systemu Wykrywania Intruzów w Sieci (NIDS).
-Emuluje ona stos IP Linuksa 2.0.x. Libnids oferuje defragmentacjê IP, asemblacjê
-strumienia TCP oraz wykrywanie skanowania portów TCP.
+Libnids jest implementacj± E-komponentu Systemu Wykrywania Intruzów w
+Sieci (NIDS). Emuluje ona stos IP Linuksa 2.0.x. Libnids oferuje
+defragmentacjê IP, asemblacjê strumienia TCP oraz wykrywanie
+skanowania portów TCP.
 
 %package devel
 Summary:	Header files and develpment documentation for libnids
 Summary(pl):	Pliki nag³ówkowe i dokumetacja do libnids
 Group:		Development/Libraries
-Group(pl):	Programowanie/Biblioteki
+Group(de):	Entwicklung/Libraries
 Group(fr):	Development/Librairies
+Group(pl):	Programowanie/Biblioteki
 Requires:	%{name} = %{version}
 
 %description devel
@@ -43,8 +47,9 @@ Pliki nag³ówkowe i dokumetacja do libnids.
 Summary:	Static libnids library
 Summary(pl):	Biblioteka statyczna libnids
 Group:		Development/Libraries
-Group(pl):	Programowanie/Biblioteki
+Group(de):	Entwicklung/Libraries
 Group(fr):	Development/Librairies
+Group(pl):	Programowanie/Biblioteki
 Requires:	%{name}-devel = %{version}
 
 %description static
@@ -73,8 +78,7 @@ rm -rf $RPM_BUILD_ROOT
 
 ln -sf	libnids.so	$RPM_BUILD_ROOT%{_libdir}/libpwrite
 
-gzip -9nf $RPM_BUILD_ROOT%{_mandir}/man*/* \
-	CHANGES README CREDITS MISC doc/*
+gzip -9nf CHANGES README CREDITS MISC doc/*
 
 %post   -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
