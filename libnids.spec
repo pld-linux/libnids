@@ -31,7 +31,7 @@ skanowania portów TCP.
 Summary:	Header files and develpment documentation for libnids
 Summary(pl):	Pliki nag³ówkowe i dokumetacja do libnids
 Group:		Development/Libraries
-Requires:	%{name} = %{version}
+Requires:	%{name} = %{epoch}:%{version}
 
 %description devel
 Header files and develpment documentation for libnids.
@@ -43,7 +43,7 @@ Pliki nag³ówkowe i dokumetacja do libnids.
 Summary:	Static libnids library
 Summary(pl):	Biblioteka statyczna libnids
 Group:		Development/Libraries
-Requires:	%{name}-devel = %{version}
+Requires:	%{name}-devel = %{epoch}:%{version}
 
 %description static
 Static libnids library.
