@@ -1,8 +1,8 @@
 Summary:	"libpwrite" Network Routine Library
 Summary(pl):	Biblioteka czynno¶ci sieciowych
 Name:		libnids
-Version:	1.14
-Release:	3
+Version:	1.16
+Release:	1
 Epoch:		1
 License:	BSD
 Group:		Libraries
