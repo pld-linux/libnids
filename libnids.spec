@@ -66,8 +66,6 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	install_prefix=$RPM_BUILD_ROOT
 
-gzip -9nf CHANGES README CREDITS MISC doc/*
-
 %post   -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
 
@@ -76,7 +74,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc *.gz doc/*.gz
+%doc CHANGES README CREDITS MISC doc/*
 %attr(755,root,root) %{_libdir}/lib*.so.*.*
 
 %files devel
