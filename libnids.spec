@@ -2,7 +2,7 @@ Summary:	"libpwrite" Network Routine Library
 Summary(pl):	Biblioteka czynno¶ci sieciowych
 Name:		libnids
 Version:	1.14
-Release:	1
+Release:	2
 Epoch:		1
 License:	BSD
 Group:		Libraries
@@ -65,8 +65,7 @@ Biblioteka statyczna libnids.
 %build
 autoconf
 %configure \
-	--with-libpcap \
-	--with-libnet=%{_prefix}
+	--with-libpcap
 %{__make}
 
 %install
