@@ -1,0 +1,268 @@
+Some fixes extracted from libnids 1.18, including security fix for
+CAN-2003-0850 (memory corruption by overlarge TCP packets)
+
+diff -Nur libnids-1.16.orig/configure.in libnids-1.16/configure.in
+--- libnids-1.16.orig/configure.in	Mon Sep 25 14:57:09 2000
++++ libnids-1.16/configure.in	Tue Oct 28 12:21:53 2003
+@@ -5,6 +5,8 @@
+ 
+ AC_INIT(src/libnids.c)
+ 
++AC_CANONICAL_SYSTEM
++
+ AC_CONFIG_HEADER(src/config.h)
+ 
+ dnl Initialize prefix.
+@@ -25,6 +27,8 @@
+ AC_C_CONST
+ AC_C_INLINE
+ AC_HEADER_TIME
++AC_C_BIGENDIAN
++
+ dnl XXX - Linux sux.
+ CFLAGS="$CFLAGS -D_BSD_SOURCE"
+ 
+diff -Nur libnids-1.16.orig/src/allpromisc.c libnids-1.16/src/allpromisc.c
+--- libnids-1.16.orig/src/allpromisc.c	Sun Jun 18 15:47:12 2000
++++ libnids-1.16/src/allpromisc.c	Tue Oct 28 12:03:27 2003
+@@ -1,30 +1,43 @@
+ #include "nids.h"
+-#if (HAVE_NEW_PCAP)
++#ifdef __linux__
+ #include <sys/socket.h>
+ #include <netinet/in.h>
+ #include <net/if.h>
+ #include <sys/ioctl.h>
++#include <unistd.h>
++#include <stdlib.h>
+ 
+ int set_all_promisc()
+ {
+-	struct ifreq ifaces[16];
++	struct ifreq *ifaces;
++	int ifaces_size=8 * sizeof(struct ifreq);
+ 	struct ifconf param;
+ 	int sock, i;
+-	param.ifc_len = sizeof(ifaces);
+-	param.ifc_req = ifaces;
++
+ 	sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
+ 	if (sock <= 0)
+ 		return 0;
++	do {
++		ifaces_size*=2;
++		ifaces=alloca(ifaces_size);
++		param.ifc_len = ifaces_size;
++		param.ifc_req = ifaces;
++
+ 	if (ioctl(sock, SIOCGIFCONF, &param))
+-		return 0;
++		goto err;
++	} while (param.ifc_len>=ifaces_size);
+ 	for (i = 0; i < param.ifc_len / sizeof(struct ifreq); i++) {
+ 		if (ioctl(sock, SIOCGIFFLAGS, ifaces + i))
+-			return 0;
++			goto err;
+ 		ifaces[i].ifr_flags |= IFF_PROMISC;
+ 		if (ioctl(sock, SIOCSIFFLAGS, ifaces + i))
+-			return 0;
++			goto err;
+ 	}
++	close(sock);
+ 	return 1;
++err:
++	close(sock);
++	return 0;
+ }
+ 
+ #endif
+diff -Nur libnids-1.16.orig/src/hash.c libnids-1.16/src/hash.c
+--- libnids-1.16.orig/src/hash.c	Mon Sep 25 14:30:46 2000
++++ libnids-1.16/src/hash.c	Tue Oct 28 12:09:05 2003
+@@ -22,15 +22,15 @@
+     }
+ 
+   gettimeofday (&s, 0);
+-  srandom (s.tv_usec);
++  srand (s.tv_usec);
+   ptr = (u_int *) xor;
+-  *ptr = random ();
+-  *(ptr + 1) = random ();
+-  *(ptr + 2) = random ();
++  *ptr = rand ();
++  *(ptr + 1) = rand ();
++  *(ptr + 2) = rand ();
+   ptr = (u_int *) perm;
+-  *ptr = random ();
+-  *(ptr + 1) = random ();
+-  *(ptr + 2) = random ();
++  *ptr = rand ();
++  *(ptr + 1) = rand ();
++  *(ptr + 2) = rand ();
+ 
+ 
+ }
+@@ -61,7 +61,7 @@
+   *(u_int *) (data + 4) = dest;
+   *(u_short *) (data + 8) = sport;
+   *(u_short *) (data + 10) = dport;
+-  for (i = 0; i < 11; i++)
++  for (i = 0; i < 12; i++)
+     res = ( (res << 8) + (data[perm[i]] ^ xor[i])) % 0xff100f;
+   return res;
+ }
+diff -Nur libnids-1.16.orig/src/ip_options.c libnids-1.16/src/ip_options.c
+--- libnids-1.16.orig/src/ip_options.c	Sun Jun 18 15:47:12 2000
++++ libnids-1.16/src/ip_options.c	Tue Oct 28 12:11:32 2003
+@@ -23,12 +23,10 @@
+ struct timestamp {
+   __u8 len;
+   __u8 ptr;
+-#if defined(LIBNET_LIL_ENDIAN)
++#ifdef WORDS_BIGENDIAN
+   __u8 flags:4, overflow:4;
+-#elif defined(LIBNET_BIG_ENDIAN)
+-  __u8 overflow:4, flags:4;
+ #else
+-#error	"unknown byte ordering"
++  __u8 overflow:4, flags:4;
+ #endif
+   __u32 data[9];
+ };
+@@ -75,12 +73,10 @@
+ };
+ 
+ struct iphdr {
+-#if defined(LIBNET_LIL_ENDIAN)
++#ifndef WORDS_BIGENDIAN
+   __u8 ihl:4, version:4;
+-#elif defined (LIBNET_BIG_ENDIAN)
+-  __u8 version:4, ihl:4;
+ #else
+-#error	"unknown byte ordering"
++  __u8 version:4, ihl:4;
+ #endif
+   __u8 tos;
+   __u16 tot_len;
+diff -Nur libnids-1.16.orig/src/killtcp.c libnids-1.16/src/killtcp.c
+--- libnids-1.16.orig/src/killtcp.c	Sun Jun 18 15:47:12 2000
++++ libnids-1.16/src/killtcp.c	Tue Oct 28 12:12:58 2003
+@@ -16,6 +16,9 @@
+ {
+   char buf[IP_H + TCP_H];
+   
++  if (libnetsock == 0)
++	  return;
++
+   libnet_build_ip(TCP_H, 0, 12345, 0, 64, IPPROTO_TCP, a_tcp->addr.saddr,
+ 		  a_tcp->addr.daddr, 0, 0, buf);
+   libnet_build_tcp(a_tcp->addr.source, a_tcp->addr.dest,
+diff -Nur libnids-1.16.orig/src/libnids.c libnids-1.16/src/libnids.c
+--- libnids-1.16.orig/src/libnids.c	Fri Nov  3 12:01:20 2000
++++ libnids-1.16/src/libnids.c	Tue Oct 28 12:14:53 2003
+@@ -22,7 +22,7 @@
+ #include "util.h"
+ #include "nids.h"
+ 
+-#if (HAVE_NEW_PCAP)
++#ifdef __linux__
+ #include <linux/if_packet.h>
+ extern int set_all_promisc();
+ extern int pcap_open_live_new(u_char *, int, int, int,u_char *, int, u_short, void *);
+@@ -111,7 +111,7 @@
+     strcpy(daddr, int_ntoa(iph->ip_dst.s_addr));
+     if (errnum != NIDS_WARN_TCP_HDR)
+       syslog(nids_params.syslog_level,
+-	     "%s,from %s:%hi to  %s:%hi\n", nids_warnings[errnum], saddr,
++	     "%s,from %s:%hu to  %s:%hu\n", nids_warnings[errnum], saddr,
+ 	     ntohs(((struct tcphdr *) data)->th_sport), daddr,
+ 	     ntohs(((struct tcphdr *) data)->th_dport));
+     else
+@@ -124,7 +124,7 @@
+     sprintf(buf, "Scan from %s. Scanned ports: ", int_ntoa(this_host->addr));
+     for (i = 0; i < this_host->n_packets; i++) {
+       strcat(buf, int_ntoa(this_host->packets[i].addr));
+-      sprintf(buf + strlen(buf), ":%hi,", this_host->packets[i].port);
++      sprintf(buf + strlen(buf), ":%hu,", this_host->packets[i].port);
+       flagsand &= this_host->packets[i].flags;
+       flagsor |= this_host->packets[i].flags;
+     }
+diff -Nur libnids-1.16.orig/src/scan.c libnids-1.16/src/scan.c
+--- libnids-1.16.orig/src/scan.c	Sun Jun 18 15:47:12 2000
++++ libnids-1.16/src/scan.c	Tue Oct 28 12:37:21 2003
+@@ -40,10 +40,10 @@
+   if (nids_params.scan_num_hosts > 0) {
+     gettimeofday(&tv, 0);
+     time0 = tv.tv_sec;
+-    hashhost = (struct host **) malloc(4 * nids_params.scan_num_hosts);
++    hashhost = (struct host **) malloc(sizeof(struct host *) * nids_params.scan_num_hosts);
+     if (!hashhost)
+       nids_params.no_mem("scan_init");
+-    memset(hashhost, 0, nids_params.scan_num_hosts * 4);
++    memset(hashhost, 0, nids_params.scan_num_hosts * sizeof(struct host *));
+   }
+ }
+ 
+diff -Nur libnids-1.16.orig/src/tcp.c libnids-1.16/src/tcp.c
+--- libnids-1.16.orig/src/tcp.c	Tue Sep 26 14:47:07 2000
++++ libnids-1.16/src/tcp.c	Tue Oct 28 12:44:58 2003
+@@ -176,9 +176,10 @@
+ static void
+ add2buf(struct half_stream * rcv, char *data, int datalen)
+ {
++  int toalloc;
++
+   if (datalen + rcv->count - rcv->offset > rcv->bufsize) {
+     if (!rcv->data) {
+-      int toalloc;
+       
+       if (datalen < 2048)
+ 	toalloc = 4096;
+@@ -188,8 +189,12 @@
+       rcv->bufsize = toalloc;
+     }
+     else {
+-      rcv->data = realloc(rcv->data, 2 * rcv->bufsize);
+-      rcv->bufsize *= 2;
++      if (datalen < rcv->bufsize)
++	toalloc = 2 * rcv->bufsize;
++      else
++	toalloc = rcv->bufsize + 2*datalen;
++      rcv->data = realloc(rcv->data, toalloc);
++      rcv->bufsize = toalloc;
+     }
+     if (!rcv->data)
+       nids_params.no_mem("add2buf");
+@@ -309,6 +314,7 @@
+       }
+       else {
+ 	rcv->count += to_copy;
++	rcv->offset = rcv->count; /* clear the buffer */
+       }
+     }
+     rcv->urgdata = data[rcv->urg_ptr - this_seq];
+@@ -324,6 +330,7 @@
+       }
+       else {
+ 	rcv->count += to_copy2;
++	rcv->offset = rcv->count; /* clear the buffer */
+       }
+     }
+   }
+@@ -335,6 +342,7 @@
+       }
+       else {
+ 	rcv->count += datalen - lost;
++	rcv->offset = rcv->count; /* clear the buffer */
+       }
+     }
+   }
+@@ -420,6 +428,8 @@
+     if (!p) {
+       pakiet->prev = 0;
+       pakiet->next = rcv->list;
++      if (rcv->list)
++	rcv->list->prev = pakiet;
+       rcv->list = pakiet;
+       if (!rcv->listtail)
+ 	rcv->listtail = pakiet;
