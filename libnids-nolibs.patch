@@ -1,0 +1,13 @@
+--- libnids-1.18/configure.in.orig	Tue Oct 28 12:53:53 2003
++++ libnids-1.18/configure.in	Tue Oct 28 12:55:28 2003
+@@ -40,8 +40,8 @@
+ dnl Checks for library functions.
+ AC_CHECK_FUNCS(gettimeofday)
+ dnl XXX - Solaris sux.
+-AC_CHECK_LIB(socket, socket)
+-AC_CHECK_LIB(nsl, gethostbyname)
++AC_SEARCH_LIBS(socket, socket)
++AC_SEARCH_LIBS(gethostbyname, nsl)
+ 
+ case "$target_cpu" in
+ 	alpha*|arm*|hp*|mips*|sparc*)
