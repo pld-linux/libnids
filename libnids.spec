@@ -58,6 +58,7 @@ Biblioteka statyczna libnids.
 %patch1 -p1
 
 %build
+cp -f %{_datadir}/libtool/config.sub .
 %{__autoconf}
 %{__autoheader}
 %configure \
