@@ -6,13 +6,6 @@ Release:	1
 Epoch:		1
 License:	BSD
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
-Group(pt_BR):	Bibliotecas
-Group(ru):	Библиотеки
-Group(uk):	Б╕бл╕отеки
 Source0:	http://www.packetfactory.net/Projects/Libnids/dist/%{name}-%{version}.tar.gz
 Patch0:		%{name}-conf.patch
 URL:		http://www.packetfactory.net/Projects/Libnids/
@@ -37,13 +30,6 @@ skanowania portСw TCP.
 Summary:	Header files and develpment documentation for libnids
 Summary(pl):	Pliki nagЁСwkowe i dokumetacja do libnids
 Group:		Development/Libraries
-Group(de):	Entwicklung/Libraries
-Group(es):	Desarrollo/Bibliotecas
-Group(fr):	Development/Librairies
-Group(pl):	Programowanie/Biblioteki
-Group(pt_BR):	Desenvolvimento/Bibliotecas
-Group(ru):	Разработка/Библиотеки
-Group(uk):	Розробка/Б╕бл╕отеки
 Requires:	%{name} = %{version}
 
 %description devel
@@ -56,13 +42,6 @@ Pliki nagЁСwkowe i dokumetacja do libnids.
 Summary:	Static libnids library
 Summary(pl):	Biblioteka statyczna libnids
 Group:		Development/Libraries
-Group(de):	Entwicklung/Libraries
-Group(es):	Desarrollo/Bibliotecas
-Group(fr):	Development/Librairies
-Group(pl):	Programowanie/Biblioteki
-Group(pt_BR):	Desenvolvimento/Bibliotecas
-Group(ru):	Разработка/Библиотеки
-Group(uk):	Розробка/Б╕бл╕отеки
 Requires:	%{name}-devel = %{version}
 
 %description static
