@@ -11,6 +11,7 @@ Group(fr):	Librairies
 Group(pl):	Biblioteki
 Source0:	http://www.packetfactory.net/Projects/Libnids/dist/%{name}-%{version}.tar.gz
 Patch0:		%{name}-conf.patch
+Patch1:		%{name}-system-libs.patch
 URL:		http://www.packetfactory.net/Projects/Libnids/
 BuildRequires:	libpcap-devel
 BuildRequires:	libnet-devel
@@ -61,11 +62,12 @@ Biblioteka statyczna libnids.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 
 %build
 autoconf
-%configure \
-	--with-libpcap
+%configure
+
 %{__make}
 
 %install
