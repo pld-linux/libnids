@@ -9,6 +9,7 @@ Group:		Libraries
 Source0:	http://dl.sourceforge.net/libnids/%{name}-%{version}.tar.gz
 # Source0-md5:	9ee6dcdfac97bae6fe611aa27d2594a5
 Patch0:		%{name}-libnet1.patch
+Patch1:		%{name}-nolibs.patch
 URL:		http://libnids.sourceforge.net/
 BuildRequires:	autoconf
 BuildRequires:	libpcap-devel
@@ -54,9 +55,11 @@ Biblioteka statyczna libnids.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 
 %build
 %{__autoconf}
+%{__autoheader}
 %configure \
 	--enable-shared
 
@@ -68,11 +71,11 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	install_prefix=$RPM_BUILD_ROOT
 
-%post   -p /sbin/ldconfig
-%postun -p /sbin/ldconfig
-
 %clean
 rm -rf $RPM_BUILD_ROOT
+
+%post   -p /sbin/ldconfig
+%postun -p /sbin/ldconfig
 
 %files
 %defattr(644,root,root,755)
