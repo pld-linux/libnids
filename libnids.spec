@@ -1,17 +1,21 @@
-Summary:	"libpwrite" Network Routine Library
-Summary(pl):	Biblioteka czynno¶ci sieciowych
+Summary:	Implementation of E-component of Network Intrusion Detection System
+Summary(pl):	Implementacja E-komponentu NIDS (sieciowego systemu wykrywania intruzów)
 Name:		libnids
 Version:	1.16
-Release:	2
+Release:	3
 Epoch:		1
 License:	BSD
 Group:		Libraries
-Source0:	http://www.packetfactory.net/Projects/Libnids/dist/%{name}-%{version}.tar.gz
+Source0:	http://dl.sourceforge.net/libnids/%{name}-%{version}.tar.gz
+# Source0-md5:	95497093d0de330be12ddc658ad7decc
 Patch0:		%{name}-conf.patch
-URL:		http://www.packetfactory.net/Projects/Libnids/
+Patch1:		%{name}-fixes-from-1.18.patch
+Patch2:		%{name}-nolibs.patch
+URL:		http://libnids.sourceforge.net/
 BuildRequires:	autoconf
-BuildRequires:	libpcap-devel
+BuildRequires:	automake
 BuildRequires:	libnet-devel
+BuildRequires:	libpcap-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -53,9 +57,13 @@ Biblioteka statyczna libnids.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
+%patch2 -p1
 
 %build
-autoconf
+cp -f /usr/share/automake/config.* .
+%{__autoconf}
+%{__autoheader}
 %configure
 
 %{__make}
@@ -66,17 +74,15 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	install_prefix=$RPM_BUILD_ROOT
 
-gzip -9nf CHANGES README CREDITS MISC doc/*
+%clean
+rm -rf $RPM_BUILD_ROOT
 
 %post   -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
 %files
 %defattr(644,root,root,755)
-%doc *.gz doc/*.gz
+%doc CHANGES README CREDITS MISC doc/*
 %attr(755,root,root) %{_libdir}/lib*.so.*.*
 
 %files devel
