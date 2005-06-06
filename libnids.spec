@@ -12,8 +12,9 @@ Patch0:		%{name}-libnet1.patch
 Patch1:		%{name}-nolibs.patch
 URL:		http://libnids.sourceforge.net/
 BuildRequires:	autoconf
-BuildRequires:	libpcap-devel
 BuildRequires:	libnet1-devel
+BuildRequires:	libpcap-devel
+BuildRequires:	libtool
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
