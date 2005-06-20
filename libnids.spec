@@ -30,13 +30,13 @@ defragmentacjê IP, asemblacjê strumienia TCP oraz wykrywanie
 skanowania portów TCP.
 
 %package devel
-Summary:	Header files and develpment documentation for libnids
+Summary:	Header files and development documentation for libnids
 Summary(pl):	Pliki nag³ówkowe i dokumetacja do libnids
 Group:		Development/Libraries
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description devel
-Header files and develpment documentation for libnids.
+Header files and development documentation for libnids.
 
 %description devel -l pl
 Pliki nag³ówkowe i dokumetacja do libnids.
