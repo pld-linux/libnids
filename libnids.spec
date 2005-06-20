@@ -12,9 +12,9 @@ Patch0:		%{name}-libnet1.patch
 Patch1:		%{name}-nolibs.patch
 URL:		http://libnids.sourceforge.net/
 BuildRequires:	autoconf
+BuildRequires:	automake
 BuildRequires:	libnet1-devel
 BuildRequires:	libpcap-devel
-BuildRequires:	libtool
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -33,7 +33,7 @@ skanowania portów TCP.
 Summary:	Header files and develpment documentation for libnids
 Summary(pl):	Pliki nag³ówkowe i dokumetacja do libnids
 Group:		Development/Libraries
-Requires:	%{name} = %{epoch}:%{version}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description devel
 Header files and develpment documentation for libnids.
@@ -45,7 +45,7 @@ Pliki nag³ówkowe i dokumetacja do libnids.
 Summary:	Static libnids library
 Summary(pl):	Biblioteka statyczna libnids
 Group:		Development/Libraries
-Requires:	%{name}-devel = %{epoch}:%{version}
+Requires:	%{name}-devel = %{epoch}:%{version}-%{release}
 
 %description static
 Static libnids library.
@@ -59,7 +59,7 @@ Biblioteka statyczna libnids.
 %patch1 -p1
 
 %build
-cp -f %{_datadir}/libtool/config.sub .
+cp -f /usr/share/automake/config.sub .
 %{__autoconf}
 %{__autoheader}
 %configure \
