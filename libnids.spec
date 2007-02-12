@@ -1,5 +1,5 @@
 Summary:	Implementation of E-component of Network Intrusion Detection System
-Summary(pl):	Implementacja E-komponentu NIDS (sieciowego systemu wykrywania intruzów)
+Summary(pl.UTF-8):   Implementacja E-komponentu NIDS (sieciowego systemu wykrywania intruzÃ³w)
 Name:		libnids
 Version:	1.21
 Release:	1
@@ -25,34 +25,34 @@ Detection System. It emulates the IP stack of Linux 2.0.x. Libnids
 offers IP defragmentation, TCP stream assembly and TCP port scan
 detection.
 
-%description -l pl
-Libnids jest implementacj± E-komponentu Systemu Wykrywania Intruzów w
+%description -l pl.UTF-8
+Libnids jest implementacjÄ… E-komponentu Systemu Wykrywania IntruzÃ³w w
 Sieci (NIDS). Emuluje ona stos IP Linuksa 2.0.x. Libnids oferuje
-defragmentacjê IP, asemblacjê strumienia TCP oraz wykrywanie
-skanowania portów TCP.
+defragmentacjÄ™ IP, asemblacjÄ™ strumienia TCP oraz wykrywanie
+skanowania portÃ³w TCP.
 
 %package devel
 Summary:	Header files and development documentation for libnids
-Summary(pl):	Pliki nag³ówkowe i dokumetacja do libnids
+Summary(pl.UTF-8):   Pliki nagÅ‚Ã³wkowe i dokumetacja do libnids
 Group:		Development/Libraries
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description devel
 Header files and development documentation for libnids.
 
-%description devel -l pl
-Pliki nag³ówkowe i dokumetacja do libnids.
+%description devel -l pl.UTF-8
+Pliki nagÅ‚Ã³wkowe i dokumetacja do libnids.
 
 %package static
 Summary:	Static libnids library
-Summary(pl):	Biblioteka statyczna libnids
+Summary(pl.UTF-8):   Biblioteka statyczna libnids
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{epoch}:%{version}-%{release}
 
 %description static
 Static libnids library.
 
-%description static -l pl
+%description static -l pl.UTF-8
 Biblioteka statyczna libnids.
 
 %prep
