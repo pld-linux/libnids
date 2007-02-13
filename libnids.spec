@@ -1,5 +1,5 @@
 Summary:	Implementation of E-component of Network Intrusion Detection System
-Summary(pl.UTF-8):   Implementacja E-komponentu NIDS (sieciowego systemu wykrywania intruzów)
+Summary(pl.UTF-8):	Implementacja E-komponentu NIDS (sieciowego systemu wykrywania intruzów)
 Name:		libnids
 Version:	1.21
 Release:	1
@@ -33,7 +33,7 @@ skanowania portów TCP.
 
 %package devel
 Summary:	Header files and development documentation for libnids
-Summary(pl.UTF-8):   Pliki nagłówkowe i dokumetacja do libnids
+Summary(pl.UTF-8):	Pliki nagłówkowe i dokumetacja do libnids
 Group:		Development/Libraries
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
@@ -45,7 +45,7 @@ Pliki nagłówkowe i dokumetacja do libnids.
 
 %package static
 Summary:	Static libnids library
-Summary(pl.UTF-8):   Biblioteka statyczna libnids
+Summary(pl.UTF-8):	Biblioteka statyczna libnids
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{epoch}:%{version}-%{release}
 
