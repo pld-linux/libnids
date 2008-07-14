@@ -1,13 +1,13 @@
 Summary:	Implementation of E-component of Network Intrusion Detection System
 Summary(pl.UTF-8):	Implementacja E-komponentu NIDS (sieciowego systemu wykrywania intruzów)
 Name:		libnids
-Version:	1.22
+Version:	1.23
 Release:	1
 Epoch:		1
 License:	BSD
 Group:		Libraries
 Source0:	http://dl.sourceforge.net/libnids/%{name}-%{version}.tar.gz
-# Source0-md5:	811b31c7a1c4c96442807913b5eb1c95
+# Source0-md5:	af35e8ef403a0ca95df2da94db856428
 Patch0:		%{name}-libnet1.patch
 Patch1:		%{name}-nolibs.patch
 URL:		http://libnids.sourceforge.net/
