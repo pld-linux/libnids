@@ -2,7 +2,7 @@ Summary:	Implementation of E-component of Network Intrusion Detection System
 Summary(pl.UTF-8):	Implementacja E-komponentu NIDS (sieciowego systemu wykrywania intruzów)
 Name:		libnids
 Version:	1.23
-Release:	1
+Release:	2
 Epoch:		1
 License:	BSD
 Group:		Libraries
@@ -10,6 +10,7 @@ Source0:	http://dl.sourceforge.net/libnids/%{name}-%{version}.tar.gz
 # Source0-md5:	af35e8ef403a0ca95df2da94db856428
 Patch0:		%{name}-libnet1.patch
 Patch1:		%{name}-nolibs.patch
+Patch2:		%{name}-elif.patch
 URL:		http://libnids.sourceforge.net/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -59,6 +60,7 @@ Biblioteka statyczna libnids.
 %setup -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %build
 cp -f /usr/share/automake/config.sub .
