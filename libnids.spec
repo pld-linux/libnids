@@ -1,18 +1,18 @@
-# note: there is some fork at https://github.com/MITRECND/libnids with 1.25
 Summary:	Implementation of E-component of Network Intrusion Detection System
 Summary(pl.UTF-8):	Implementacja E-komponentu NIDS (sieciowego systemu wykrywania intruzów)
 Name:		libnids
-Version:	1.24
-Release:	4
+Version:	1.26
+Release:	1
 Epoch:		1
 # contains modified Linux 2.0.36 sources, so v2 only
 License:	GPL v2
 Group:		Libraries
-Source0:	http://downloads.sourceforge.net/libnids/%{name}-%{version}.tar.gz
-# Source0-md5:	72d37c79c85615ffe158aa524d649610
+#Source0Download: https://github.com/MITRECND/libnids/releases
+Source0:	https://github.com/MITRECND/libnids/archive/%{version}/%{name}-%{version}.tar.gz
+# Source0-md5:	1afca870420cd1e73251c72561bb0ea5
 Patch0:		%{name}-nolibs.patch
 Patch1:		gcc5.patch
-URL:		http://libnids.sourceforge.net/
+URL:		https://libnids.sourceforge.net/
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	glib2-devel >= 1:2.2.0
